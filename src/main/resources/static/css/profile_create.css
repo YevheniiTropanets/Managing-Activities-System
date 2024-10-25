@@ -1,0 +1,58 @@
+.profile-create-block {
+	width: 700px;
+	height: 85%;
+}
+
+.profile-create-block-h1 {
+	color: #D0403E;
+	font-size: 24px;
+	margin-top: 40px;
+	text-align: center;
+}
+
+.profile-create-form {
+	width: 600px;
+	margin-top: 25px;
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+}
+
+.profile-create-form label {
+	font-size: 18px;
+	font-weight: 700;
+	color: #555555;
+	font-family: 'JetBrains Mono', monospace;
+	font-weight: 600;
+}
+
+.form-input {
+	font-size: 22px;
+	background-color: #EFEFEF;
+	border-radius: 3px;
+	line-height: 40px;
+	margin: 2px 0 20px 0;
+	padding: 0 10px;
+}
+
+.profile-create-form select {
+	height: 45px;
+}
+
+.profile-create-form textarea {
+	resize: vertical;
+	height: 120px;
+}
+
+.profile-create-form button {
+	align-self: center;
+	height: 55px;
+	width: 50%;
+	margin: 10px 0 30px 0;
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.profile-create-skills-picker div {
+	width: 150px;
+}

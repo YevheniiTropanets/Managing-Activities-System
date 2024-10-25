@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<script>
+    function toggleNotifications() {
+        var content = document.getElementById("notifications-block");
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+        } else {
+            content.style.display = "none";
+        }
+    }
+
+    function toggleSchedule() {
+        var content = document.getElementById("schedule-block");
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+        } else {
+            content.style.display = "none";
+        }
+    }
+
+    function openAnnouncementModal() {
+        var modal = document.getElementById("announcement-modal");
+        modal.style.display = "block"; // Відкриває модальне вікно
+    }
+
+    function closeAnnouncementModal() {
+        var modal = document.getElementById("announcement-modal");
+        modal.style.display = "none"; // Закриває модальне вікно
+    }
+</script>
+<style>
+    .full-width {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        display: block;
+    }
+    .del-announc:hover{
+        cursor: pointer;
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+</style>
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+<!--                    <li>-->
+<!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+<!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="main-block">
+
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title" th:text="${baner.getActivity().getTitle()}">VenueTitle</h1>
+            <br>
+            <div class="inline-elements">
+                <img th:src="@{'data:image/jpeg;base64,'+${baner.generateBase64Image()}}" class="full-width"
+                     alt="profile">
+                <br>
+            </div>
+            <div class="inline-elements">
+                <p class="field-value" th:text="${baner.getDescription()}"></p>
+            </div>
+            <br>
+            <div style="display: flex; justify-content: center;">
+                <h2 style="margin-right: 5px;">Анонси</h2>
+                <button style="background-color: white;" onclick="toggleNotifications()">
+                    <img src="/img/arrow.png" style="height:13px; width: 25px; background-color: white;"/>
+                </button>
+            </div>
+            <br>
+            <div style="display: flex; justify-content: center;">
+                <button th:if="${isActivityBelongToUser}" class="del-announc" onclick="openAnnouncementModal()"
+                        style="background-color: white; border: none;">
+                    <img src="/img/add.png" style="height: 35px; width: 35px;" alt="Додати анонс"/>
+                </button>
+            </div>
+
+            <br>
+
+            <div id="announcement-modal" class="profile-my-form"
+                 style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); z-index: 1000;">
+                <button onclick="closeAnnouncementModal()"
+                        style="float: right; border: none; background-color: white;width: 10px;height: 15px">
+                    X
+                </button>
+
+                <h2 style="text-align: center">Додати анонс</h2>
+
+                <!-- Форма для додавання анонсу -->
+                <form th:action="@{/announcement/create}" method="post">
+
+                    <div class="inline-elements">
+                        <textarea class="field-input field-textarea" id="announcementDescription" name="description"
+                                  required></textarea>
+                    </div>
+                    <input style="visibility: hidden" th:value="${baner.getId()}" th:name="banerId">
+                    <!-- Кнопка для додавання анонсу -->
+                    <button style="width: 100%;margin-right: 10px" class="standart-button" type="submit">Додати</button>
+                </form>
+            </div>
+
+
+            <div id="notifications-block" style="display: none;">
+                <div style="display:flex; justify-content: center">
+                    <p th:if="${announcements.isEmpty()}" style="margin-bottom: 20px; font-size: 19px;"><strong>Анонсів
+                        немає</strong></p>
+                </div>
+                <div th:each="announcement: ${announcements}">
+
+                    <div  class="inline-elements" style="display: flex; align-items: center;">
+                        <p style="font-size: 19px;"><strong
+                                th:text="${announcement.getFormattedDate()}">20 травня о
+                            19:00</strong></p>
+                        <a th:if="${isActivityBelongToUser}" style="margin-bottom: 18px;padding-left: 15px; width: 15px; height: 20px; background-color: white" th:href="@{'/announcement/delete/' + ${announcement.getId()}}" class="delete-but">
+                            <img src="/img/delete.png" class="delete-img" alt="Edit"/>
+                        </a>
+                    </div>
+
+                    <p class="field-value" th:text="${announcement.getDescription()}">Текст оповіщення</p>
+                    <br>
+                    <hr>
+                </div>
+            </div>
+            <br>
+            <div style="display: flex; justify-content: center;">
+                <h2 style="margin-right: 10px;">Розклад події</h2>
+                <button style="background-color: white;" onclick="toggleSchedule()">
+                    <img src="/img/arrow.png" style="height:13px; width: 25px; background-color: white;"/>
+                </button>
+            </div>
+
+
+            <div id="schedule-block" style="display: none;">
+                <div th:each="plannedActv: ${plannedActivities}" class="project-el">
+                    <div class="inline-elements">
+                        <p class="field-name">Місце проведення</p>
+                        <a class="field-value"
+                           th:href="@{/venues/{venueId}(venueId = ${plannedActv.getVenue().getId()})}"
+                           th:text="${plannedActv.getVenue().getTitle()}">Title</a>
+                    </div>
+                    <div class="inline-elements">
+                        <p class="field-name">Дата проведення</p>
+                        <p class="field-value" th:text="${plannedActv.getFormattedStartDateTime()}">
+                    </div>
+                    <hr>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>

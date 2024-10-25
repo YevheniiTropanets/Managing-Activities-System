@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+	<title>Авторизація</title>
+
+	<link rel="stylesheet" type="text/css" href="/css/login.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+
+<body class="main-block-fullscreen">
+	<div class="error">
+		<img src="https://cdn.pixabay.com/photo/2013/07/12/13/16/alert-146730_960_720.png" alt="">
+		<p id="error-text"></p>
+		<button class="standart-button" onclick="hideError()">OK</button>
+	</div>
+
+
+	<div class="content-block auth-block">
+		<h1>Реєстрація</h1>
+		<form th:action="@{/register}" class="auth-form" method="post">
+			<label for="email">Електронна пошта</label>
+			<input type="text" id="email" name="email">
+			<label for="password">Пароль</label>
+			<input type="password" id="password" name="password">
+			<div th:if="${errorMessage}" >
+				<p th:text="${errorMessage}" class="error-text"></p>
+			</div>
+			<button class="standart-button" type="submit">Зареєструватися</button>
+			<p>Вже зареєстровані? <a href="/login">Увійдіть</a></p>
+		</form>
+
+
+	</div>
+</body>
+
+<!--<script type="text/javascript" src="/js/login_validation.js"></script>-->
+
+</html>

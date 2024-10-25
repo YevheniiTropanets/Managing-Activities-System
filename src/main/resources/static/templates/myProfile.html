@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Мій профіль</title>
+    <link rel="icon" type="image/png" href="/img/app.ico"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="app-body">
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+<!--                    <li>-->
+<!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+<!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .btn-backhround{
+        background-color: #ebebeb;
+        width: 51px;
+        height: 51px;
+    }
+    .del-announc:hover{
+        cursor: pointer;
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+</style>
+
+<div class="main-block">
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title">Мій профіль</h1>
+            <div class="inline-elements">
+                <p class="field-name">Організація</p>
+                <p class="field-value" th:text="${profile.getOrganisation()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Ім'я</p>
+                <p class="field-value" th:text="${profile.getFirstname()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Прізвище</p>
+                <p class="field-value" th:text="${profile.getSurname()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Телефон</p>
+                <p class="field-value" th:text="${profile.getPhone()}"></p>
+            </div>
+            <div class="inline-elements">
+                <a class="field-name" th:href="@{/venues}">Кількість майданчиків</a>
+                <p class="field-value" th:text ="${venueAmount}"></p>
+                <a th:href="@{/venues/create}" class="delete-but del-announc">
+                    <img src="/img/add.png"  class="btn-backhround" alt="AddVenue"/>
+                </a>
+            </div>
+            <a class="standart-button" th:href="@{/getOwnerApplications/1}">Переглянути заявки для власника майданчиків</a>
+            <div class="inline-elements">
+                <a class="field-name" th:href="@{/activities}">Кількість подій</a>
+                <p class="field-value" th:text ="${activityAmount}"></p>
+                <a th:href="@{/activity/create}" class="delete-but del-announc">
+                    <img src="/img/add.png"  class="btn-backhround" alt="AddActivity"/>
+                </a>
+            </div>
+            <a class="standart-button" th:href="@{/getOrganisatorApplication/1}">Переглянути заявки для організатора події</a>
+            <br>
+            <a th:href="@{/profile/update}" class="standart-button">Оновити дані профілю</a>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

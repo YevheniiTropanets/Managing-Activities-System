@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Мій профіль</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_create.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+</head>
+
+<style>
+
+    b {
+        font-size: 18px;
+
+    }
+
+    .venue-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .venue-table th, .venue-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .venue-table th {
+        background-color: #f2f2f2;
+    }
+
+    .filter-container {
+        margin: 10px 10px 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        height: 110px;
+
+    }
+
+    .filter-input {
+        margin-right: 10px;
+        margin-bottom: 10px;
+        width: 45%;
+        height: 50px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+
+    .filter-button2 {
+        padding: 5px 10px;
+        background-color: #C12D3C;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: inline-block;
+    }
+
+    .button-div {
+        display: flex;
+        justify-content: center;
+    }
+
+    .button-div button {
+        width: 150px;
+        height: 40px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+</style>
+
+
+<body class="app-body">
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+                    <!--                    <li>-->
+                    <!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+                    <!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="main-block">
+    <div class="content-block main-content-block">
+        <h1 class="profile-create-block-h1">Результат розподілу заявок</h1>
+        <br>
+        <div class="scrollable-block">
+
+            <div class="profile-my-form">
+
+                <table class="venue-table">
+                    <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Назва події</th>
+                        <th>Назва майданчику</th>
+                        <th>Статус</th>
+                        <th>Початок події</th>
+                        <th>Завершення події</th>
+                        <th>Прийняти/Відхилити</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="edge, status : ${resultList}">
+                        <td th:text="${status.index + 1}"></td>
+                        <td>
+                            <a th:if="${edge.getApplicationToGetVenue() != null && edge.getApplicationToGetVenue().getActivity() != null}"
+                               th:href="@{/activity/{activityId}(activityId = ${edge.getApplicationToGetVenue().getActivity().getId()})}"
+                               th:text="${edge.getApplicationToGetVenue().getActivity().getTitle()}"
+                               target="_blank"></a>
+                        </td>
+                        <td th:text="${edge.getVenue().getTitle()}"></td>
+                        <td>
+                <span th:switch="${edge.getStatus().name()}">
+                    <span th:case="'EXPECT'">На розгляданні</span>
+                    <span th:case="'DECLINED'" style="color: #b40012">Відхилено</span>
+                    <span th:case="'APPROVED'" style="color: darkgreen">Прийнято</span>
+                </span>
+                        </td>
+                        <td th:text="${edge.getApplicationToGetVenue().getStartDate()}"></td>
+                        <td th:text="${edge.getApplicationToGetVenue().getEndDate()}"></td>
+                        <td>
+                            <div class="button-group">
+                                <a th:if="${edge.getStatus().name() != 'APPROVED'}"
+                                   th:href="'/algoApplications/approve/' + ${edge.getId()}">
+                                    <img src="/img/check-mark.png" class="delete-img" alt="Edit"/>
+                                </a>
+                                <a th:if="${edge.getStatus().name() != 'DECLINED'}"
+                                   th:href="'/algoApplications/decline/' + ${edge.getId()}">
+                                    <img src="/img/delete-button.png" class="delete-img" alt="decline"/>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+
+</body>
+
+</html>

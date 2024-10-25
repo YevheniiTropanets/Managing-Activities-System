@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+                    <!--                    <li>-->
+                    <!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+                    <!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .content-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .content-flex a {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .project-el p {
+        font-size: 16px;
+        margin-top: 12px;
+        line-height: 24px;
+    }
+
+    hr {
+        margin-top: 15px;
+        border-top: 2px solid #e7e7e7;
+    }
+
+    .delete-but {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .delete-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+
+</style>
+<div class="main-block">
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title">Cтворені події</h1>
+            <div th:each="activity : ${activityList}" class="project-el">
+                <div class="content-flex">
+                    <a th:href="@{/activity/{activityId}(activityId = ${activity.getId()})}" th:text="${activity.getTitle()}">Title</a>
+                    <div class="button-group">
+                        <a th:href="@{'activity/delete/' + ${activity.getId()}}" class="delete-but">
+                            <img src="/img/delete.png" class="delete-img" alt="Delete"/>
+                        </a>
+                        <a th:href="@{'activity/getUpdateForm/' + ${activity.getId()}}" class="delete-but">
+                            <img src="/img/edit.png" class="delete-img" alt="Edit"/>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>

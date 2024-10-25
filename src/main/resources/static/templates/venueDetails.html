@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+                    <!--                    <li>-->
+                    <!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+                    <!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="main-block">
+
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title" th:text="${venue.getTitle()}">VenueTitle</h1>
+            <div class="inline-elements">
+                <p class="field-name">Вмістимість</p>
+                <p class="field-value" th:text="${venue.getMaximumSeats()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Ціна аренди</p>
+                <p class="field-value" th:text="${venue.getRentPrice()}">21</p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Опис</p>
+                <p class="field-value" th:text="${venue.getDescription()}">Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet
+                    consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet
+                    consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet
+                    consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet
+                    consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minima</p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Адреса</p>
+                <p class="field-value"
+                   th:text="${'м. '+ venue.getCityName()} +', вул. '+ ${venue.getStreetName()} +','+ ${venue.getAdresIndex()}">
+                    github.com/hehe</p>
+            </div>
+            <h1 class="page-title">Найближчі події</h1>
+            <div th:each="plannedActv: ${plannedActivities}" class="project-el">
+                <div class = "inline-elements">
+                    <p class="field-name">Назва події</p>
+                    <a class="field-value" th:href="@{/activity/{activityId}(activityId = ${plannedActv.getActivity().getId()})}" th:text="${plannedActv.getActivity().getTitle()}">Title</a>
+                </div>
+                <div class = "inline-elements">
+                    <p class="field-name">Дата проведення</p>
+                    <p class="field-value" th:text="${plannedActv.getOnlyStartDate()}"></p>
+                </div>
+                <div class = "inline-elements">
+                    <p class="field-name">Час проведення</p>
+                    <p class="field-value" th:text="${plannedActv.getStartTime()}"></p>
+                </div>
+                <hr>
+            </div>
+
+
+            <h1 class="page-title">Проведені події</h1>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>

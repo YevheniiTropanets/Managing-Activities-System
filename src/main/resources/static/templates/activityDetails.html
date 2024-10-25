@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+                    <!--                    <li>-->
+                    <!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+                    <!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="main-block">
+
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title" th:text="${activity.getTitle()}"></h1>
+            <div class="inline-elements">
+                <p class="field-name">Назва</p>
+                <p class="field-value" th:text="${activity.getTitle()}">
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Кількість відвідувачів</p>
+                <p class="field-value" th:text="${activity.getAmountSeats()}">
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Опис</p>
+                <p class="field-value" th:text="${activity.getDescription()}"></p>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Організація</label>
+                <p class="field-value" type="text" th:text="${activity.getOrganisation()}">
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Жанр</label>
+                <p class="field-value" id="genre" th:text="${activity.getGenre()}">
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Стиль</label>
+                <p class="field-value" type="text" th:text="${activity.getActivityType()}">
+            </div>
+            <div th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                <a th:if="${isActivityBelongToUser}" th:unless="${doesActivityHaveBanner}"
+                   th:href="@{/banner/create/{activityId}(activityId =${activity.getId()})}" class="standart-button">Додати
+                    афішу</a>
+                <a th:if="${isActivityBelongToUser && doesActivityHaveBanner}"
+                   th:href="@{/banner/delete/{bannerId}(bannerId =${activity.getActivityBanner().getId()})}"
+                   class="standart-button">Видалити афішу</a>
+                <a th:if="${isActivityBelongToUser && doesActivityHaveBanner}"
+                   th:href="@{/banner/update/{bannerId}(bannerId =${activity.getActivityBanner().getId()})}"
+                   class="standart-button">Оновити афішу</a>
+                <a th:if="${doesActivityHaveBanner}"
+                   th:href="@{/banner/details/{banerId}(banerId =${activity.getActivityBanner().getId()})}"
+                   class="standart-button">Переглянути афішу</a>
+                <a th:href="@{/profile/me}" class="standart-button">Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</body>
+
+
+</html>

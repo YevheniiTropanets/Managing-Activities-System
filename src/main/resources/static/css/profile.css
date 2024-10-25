@@ -1,0 +1,42 @@
+.profile-sidebar-wrapper {
+	height: calc(95vh - 70px);
+	width: 150px;
+}
+
+.profile-sidebar {
+	height: 125px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.profile-sidebar .standart-button {
+	width: 140px;
+	height: 30px;
+	margin: 3px auto;
+	font-size: 19px;
+	font-weight: 500;
+}
+
+.skills-picker {
+	width: 100%;
+	margin: 15px 0 30px 0;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.skills-picker div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.skills-picker input[type=checkbox] {
+	margin: 5px 6px 5px 0;
+	min-width: 25px;
+	min-height: 25px;
+}
+
+.skills-picker span {
+	margin-right: 15px;
+}

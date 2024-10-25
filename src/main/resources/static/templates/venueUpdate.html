@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+<!--                    <li>-->
+<!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+<!--                    </li>-->
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="main-block">
+
+    <div class="content-block main-content-block">
+        <form class="scrollable-block profile-my-form" th:action="@{/venues/update/{venueId}(venueId = ${venue.getVenueId()})}" method="post">
+            <h1 class="page-title" th:text="${venue.getTitle()}">VenueTitle</h1>
+            <div class = "inline-elements">
+                <p class ="field-name">Назва</p>
+                <input class = "field-input" type ="text" id = "title" name ="title" th:value="${venue.getTitle()}" required>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name" >Вмістимість</p>
+                <input class="field-input" type="text" id="maximumSeats" name="maximumSeats" th:value="${venue.getMaximumSeats()}" required>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Ціна аренди</p>
+                <input class="field-input" type="number" id="rentPrice" name="rentPrice" th:value="${venue.getRentPrice()}" required>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Опис</p>
+                <textarea class="field-input field-textarea" type="text" id="description" name="description" th:text="${venue.getDescription()}" required></textarea>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Місто</label>
+                <input class="field-input" type="text" id="cityName" name="cityName" th:value="${venue.getCityName()}" required>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Вулиця</label>
+                <input class="field-input" id="streetName" name="streetName" th:value="${venue.getStreetName()}" required></input>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Індекс</label>
+                <input class="field-input" id="adresIndex" name="adresIndex" th:value="${venue.getAdresIndex()}" required ></input>
+            </div>
+
+            <button class="standart-button">Зберегти зміни</button>
+            <a th:href="@{/venues}" class="standart-button">Назад</a>
+        </form>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+.project-show-block {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 40px 20px;
+}
+
+.project-show-block .page-title {
+    margin-bottom: 30px;
+}
+
+.project-param {
+    margin: 12px 0;
+}
+
+.project-param .param-name {
+    color: #6F6F6F;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.project-param .param-value {
+    margin-top: 6px;
+    background-color: #EFEFEF;
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    line-height: 32px;
+}
+
+.apply-button-form {
+    margin-top: auto;
+}
+
+.apply-button {
+    width: 100%;
+    height: 32px;
+    font-size: 16px;
+    font-weight: 500;
+}

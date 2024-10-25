@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<style>
+
+    .event-card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        margin: 10px 10px 10px 10px;
+    }
+    a{
+        color: black;
+    }
+    .event-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .event-details {
+        padding: 15px;
+        font-size: 20px;
+    }
+
+    .event-title {
+        font-size: 1.5em;
+        margin: 0;
+        color: #333;
+    }
+
+    .event-date,
+    .event-location {
+        color: #666;
+        margin: 5px 0;
+    }
+
+    .event-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+
+    .filter-container {
+        display: inline;
+        width: 500px;
+        margin: 10px;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        height: 90px; /* Зменшена висота */
+    }
+
+    .filter-input {
+        width: 135px; /* Зменшена ширина полів */
+        height: 35px; /* Зменшена висота */
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .filter-date {
+        width: 135px; /* Зменшена ширина полів */
+        height: 25px; /* Зменшена висота */
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .filter-button {
+        padding: 5px 10px;
+        background-color: #C12D3C;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: block; /* Щоб кнопка була окремим блоком */
+        margin-top: 10px; /* Відступ зверху */
+    }
+
+    .event-grid {
+        display: flex;
+        flex-wrap: wrap; /* Для розміщення карток у сітці */
+        gap: 10px; /* Відступ між картками */
+    }
+    .button-div {
+        display: flex;
+        justify-content: center;
+    }
+    .button-div button {
+        width: 150px;
+        height: 40px;
+        text-align: center;
+        font-size: 15px;
+    }
+    .main-content-block {
+        width: 1450px; /* Збільшена ширина, щоб зробити блок вдвічі ширшим */
+        height: calc(95vh - 70px); /* Висота блоку */
+        display: flex; /* Дозволяє використання флексбокс-системи */
+        flex-direction: column; /* Напрямок розташування елементів всередині блоку */
+
+    }
+    body, html {
+        height: auto; /* Забезпечує можливість прокрутки */
+        overflow-x: hidden; /* Уникає горизонтальної прокрутки */
+    }
+</style>
+<body class="app-body">
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
+        <ul class="menu">
+            <li>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <li>
+                        <a th:href="@{/logout}">Вийти</a>
+                    </li>
+                    <li>
+                        <a th:if="${isAdmin}">Додати артиста</a>
+                    </li>
+                </ul>
+
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="main-block">
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+
+
+            <h1 style="font-size: 35px;" class="page-title">Події що наближаються</h1>
+            <form class="filter-container" th:action="@{/filterPlanned}" method="post">
+                <input type="date" name="filterDate" class="filter-date" required/>
+
+                <!-- Вибір жанру -->
+                <select id="genre"  name="filterGenre" class="filter-input" onchange="updateStyles()">
+                    <option value="">Виберіть жанр</option>
+                    <option value="Театр">Театр</option>
+                    <option value="Концерт">Концерт</option>
+                    <option value="Фестиваль">Фестиваль</option>
+                    <option value="StandUp">StandUp</option>
+                </select>
+
+                <!-- Вибір стилю, який оновлюється залежно від жанру -->
+                <select id="style" name="filterStyle" class="filter-input">
+                    <option value="">Виберіть стиль</option>
+                </select>
+
+                <button class="filter-button">Застосувати фільтри</button>
+            </form>
+
+            <div class="event-grid" >
+                <div class="event-card" th:each="planned: ${plannedActivities}">
+                    <a target="_blank" th:href="@{/banner/details/{banerId}(banerId = ${planned.getActivity().getActivityBanner().getId()})}"><img th:src="@{'data:image/jpeg;base64,'+${planned.getActivity().getActivityBanner().generateBase64Image()}}" class="event-image" alt="profile"></a>
+                    <div class="event-details">
+                        <p  class="event-title" th:text="${planned.getActivity().getTitle()}">Назва події</p>
+                        <br>
+                        <p th:text="${planned.getActivity().getGenre()}"></p>
+                        <p class="event-date" th:text="${planned.getFormattedStartDateTime()}">
+                        <p class="event-location"th:text="${planned.getVenue().getStreet().getCity().getCityName()}">Місце: Київ, Палац Спорту</p>
+                        <a  target="_blank" class="event-location" th:href="@{/venues/{venueId}(venueId = ${planned.getVenue().getId()})}" th:text="${planned.getVenue().getTitle()}"></a>
+
+                    </div>
+                </div>
+                <!-- Додайте більше карток тут -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateStyles() {
+        var genre = document.getElementById('genre').value;
+        var stylesList = document.getElementById('style');
+
+        // Очищення списку стилів перед додаванням нових
+        stylesList.innerHTML = "";
+
+        var styles = [];
+
+        if (genre === "Театр") {
+            styles = [
+                "Трагедія",
+                "Комедія",
+                "Трагікомедія",
+                "Драма",
+                "Опера",
+                "Балет",
+                "Оперета",
+                "Мюзикл",
+                "Театр ляльок",
+                "Театр тіней"
+
+            ];
+        } else if (genre === "Концерт") {
+            styles = [
+                "Поп-концерти",
+                "Рок-концерти",
+                "Реп- та хіп-хоп-концерти",
+                "Електронні концерти"
+
+            ];
+        } else if (genre === "Фестиваль") {
+            styles = [
+                "Музичний",
+                "Мистецький",
+                "Історичний",
+                "Гастрономічний",
+                "Кінофестиваль"
+            ];
+        } else if (genre === "StandUp") {
+            styles = [
+                "Імпровізація",
+                "Відкритий мікрофон",
+                "Персональний виступ"
+            ];
+        }
+
+        // Додавання опцій до списку стилів
+        styles.forEach(function (style) {
+            var option = document.createElement('option');
+            option.value = style;
+            option.innerText = style;
+            stylesList.appendChild(option);
+        });
+    }
+</script>
+
+
+</body>
+</html>

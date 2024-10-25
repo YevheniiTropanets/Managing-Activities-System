@@ -1,0 +1,58 @@
+.profile-my-form {
+    padding: 20px 40px;
+    max-width: 100%;
+}
+
+.profile-my-form .page-title {
+    margin-bottom: 20px;
+}
+
+.inline-elements {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+    max-width: 100%;
+}
+
+.field-name {
+    font-size: 18px;
+    user-select: none;
+    margin-top: 6px;
+	font-weight: 700;
+    color: #555555;
+	font-family: 'JetBrains Mono', monospace;
+	font-weight: 600;
+    min-width: 160px;
+}
+
+.field-value {
+    background-color: #ebebeb;
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-size: 18px;
+    width: 100%;
+}
+
+.field-input {
+    background-color: #ebebeb;
+    padding: 6px 10px;
+    line-height: 18px;
+    border-radius: 3px;
+    font-size: 18px;
+    width: 100%;
+}
+
+.field-textarea {
+    height: 120px;
+}
+
+.profile-my-form .standart-button {
+    min-height: 30px;
+    max-width: 100%;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+.profile-my-skills-picker div {
+	width: 130px;
+}

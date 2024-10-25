@@ -1,0 +1,97 @@
+.app-body {
+	gap: 40px;
+}
+
+.app-name {
+	color: white;
+	font-size: 35px;
+	font-weight: 600;
+}
+
+.auth-block {
+	width: 510px;
+	height: 500px;
+	margin-top: 30px;
+}
+
+.auth-block h1 {
+	color: #D0403E;
+	font-weight: 700;
+	font-size: 26px;
+	margin-top: 40px;
+	text-align: center;
+}
+
+.auth-form {
+	width: 430px;
+	margin-top: 35px;
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+}
+
+.auth-form label {
+	font-size: 20px;
+	color: #555555;
+	font-family: 'JetBrains Mono', monospace;
+	font-weight: 600;
+}
+
+.auth-form input {
+	font-size: 21px;
+	background-color: #EFEFEF;
+	border: none;
+	border-radius: 3px;
+	line-height: 50px;
+	margin: 10px 0 20px 0;
+	padding: 0 10px;
+}
+
+.auth-form button {
+	margin-top: 30px;
+	height: 60px;
+	font-size: 22px;
+	font-weight: 700;
+}
+
+
+.auth-form p {
+	margin-top: 20px;
+	font-size: 20px;
+}
+
+.auth-form a {
+	font-weight: 600;
+}
+
+.error {
+	width: 400px;
+	height: 350px;
+	background-color: #f7f7f7;
+	position: fixed;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	border-radius: 30px;
+	gap: 30px;
+}
+
+.error img {
+	width: 150px;
+	height: 150px;
+}
+
+.error p {
+	text-align: center;
+	font-size: 20px;
+	padding: 0 10px;
+}
+
+.error button {
+	width: 200px;
+	height: 50px;
+	font-size: 20px;
+	border-radius: 5px;
+}
